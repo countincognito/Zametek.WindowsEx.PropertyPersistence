@@ -45,16 +45,13 @@
   <ItemGroup>
     <Compile Include="Abstraction\AbstractPropertyState.cs" />
     <Compile Include="Abstraction\AbstractPropertyStateExtension.cs" />
-    <Compile Include="Abstraction\GenericPropertyStateHelper.cs" />
-    <Compile Include="Abstraction\Persistence.cs" />
+    <Compile Include="GenericPropertyStateHelper.cs" />
+    <Compile Include="Implementation\Xml\Element.cs" />
+    <Compile Include="Persistence.cs" />
     <Compile Include="Contracts\IAccessStateResource.cs" />
-    <Compile Include="Abstraction\tmp\AbstractElement.cs" />
-    <Compile Include="Abstraction\tmp\AbstractState.cs" />
-    <Compile Include="Abstraction\tmp\AbstractProperty.cs" />
     <Compile Include="Contracts\IAmElement.cs" />
     <Compile Include="Contracts\IAmProperty.cs" />
     <Compile Include="Contracts\IAmState.cs" />
-    <Compile Include="Implementation\Xml\Element.cs" />
     <Compile Include="Implementation\Xml\State.cs" />
     <Compile Include="Implementation\Xml\Property.cs" />
     <Compile Include="PropertyStateMode.cs" />

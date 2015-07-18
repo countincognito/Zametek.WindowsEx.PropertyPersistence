@@ -1,22 +1,22 @@
-﻿//using System.Collections.Generic;
-//using System.Xml.Serialization;
+﻿using System.Collections.Generic;
+using System.Xml.Serialization;
 
-//namespace Zametek.WindowsEx.PropertyPersistence
-//{
-//    [XmlRoot("state")]
-//    public class State
-//        : IAmState<Element>
-//    {
-//        public State()
-//        {
-//            Elements = new List<Element>();
-//        }
+namespace Zametek.WindowsEx.PropertyPersistence
+{
+    [XmlRoot("state")]
+    public class State
+        : IAmState<Element>
+    {
+        public State()
+        {
+            Elements = new List<Element>();
+        }
 
-//        [XmlElement("element")]
-//        public List<Element> Elements
-//        {
-//            get;
-//            private set;
-//        }
-//    }
-//}
+        [XmlElement("element")]
+        public List<Element> Elements
+        {
+            get;
+            private set;
+        }
+    }
+}
