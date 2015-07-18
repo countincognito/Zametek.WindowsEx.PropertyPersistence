@@ -190,8 +190,6 @@ namespace Zametek.WindowsEx.PropertyPersistence
             m_PropertyValues[property] = value;
         }
 
-
-
         #endregion
 
         #region Internal Static Methods
@@ -210,15 +208,18 @@ namespace Zametek.WindowsEx.PropertyPersistence
         {
             var frameworkElement = element as FrameworkElement;
             FrameworkElement visualAnchor = AbstractPropertyState<TState, TElement, TProperty>.GetVisualAnchor(element);
-            if (frameworkElement == null || visualAnchor != null)
+            if (frameworkElement == null
+                || visualAnchor != null)
             {
                 frameworkElement = visualAnchor;
-                if (frameworkElement != null && AbstractPropertyState<TState, TElement, TProperty>.GetIsNamespacingEnabled(element))
+                if (frameworkElement != null
+                    && AbstractPropertyState<TState, TElement, TProperty>.GetIsNamespacingEnabled(element))
                 {
                     return GetNamespace(frameworkElement) + GetNamespaceName(frameworkElement) + '.';
                 }
             }
-            if (frameworkElement != null && !AbstractPropertyState<TState, TElement, TProperty>.GetIsNamespacingEnabled(element))
+            if (frameworkElement != null
+                && !AbstractPropertyState<TState, TElement, TProperty>.GetIsNamespacingEnabled(element))
             {
                 frameworkElement = null;
             }

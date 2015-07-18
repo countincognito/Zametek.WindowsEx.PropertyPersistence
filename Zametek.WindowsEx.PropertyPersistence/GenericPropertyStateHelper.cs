@@ -235,7 +235,7 @@ namespace Zametek.WindowsEx.PropertyPersistence
                     Target = element,
                     Property = property,
                 },
-                Source = s_PropertyStates,                                        // Not strictly necessary.
+                Source = s_PropertyStates,                                         // Not strictly necessary.
                 Path = new PropertyPath(string.Format("[{0}]", uidWithNamespace)), // Not strictly necessary.
                 UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
             };

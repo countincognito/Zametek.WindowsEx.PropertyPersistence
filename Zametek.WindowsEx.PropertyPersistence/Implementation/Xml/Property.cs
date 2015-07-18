@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace Zametek.WindowsEx.PropertyPersistence
+namespace Zametek.WindowsEx.PropertyPersistence.Xml
 {
     [XmlType("property")]
     public class Property

@@ -46,7 +46,10 @@
     <Compile Include="Abstraction\AbstractPropertyState.cs" />
     <Compile Include="Abstraction\AbstractPropertyStateExtension.cs" />
     <Compile Include="GenericPropertyStateHelper.cs" />
+    <Compile Include="Implementation\Xml\PropertyState.cs" />
     <Compile Include="Implementation\Xml\Element.cs" />
+    <Compile Include="Implementation\Xml\PropertyStateExtension.cs" />
+    <Compile Include="Implementation\Xml\StateResourceAccess.cs" />
     <Compile Include="Persistence.cs" />
     <Compile Include="Contracts\IAccessStateResource.cs" />
     <Compile Include="Contracts\IAmElement.cs" />
@@ -54,6 +57,7 @@
     <Compile Include="Contracts\IAmState.cs" />
     <Compile Include="Implementation\Xml\State.cs" />
     <Compile Include="Implementation\Xml\Property.cs" />
+    <Compile Include="Implementation\Xml\PropertyStateHelper.cs" />
     <Compile Include="PropertyStateMode.cs" />
     <Compile Include="Utilities\ForDependencyObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
