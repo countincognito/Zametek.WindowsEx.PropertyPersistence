@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Windows;
-using Zametek.WindowsEx.PropertyPersistence.Xml;
+using Zametek.WindowsEx.PropertyPersistence.Json;
 
 namespace Zametek.WindowsEx.PropertyPersistence.TestApp
 {

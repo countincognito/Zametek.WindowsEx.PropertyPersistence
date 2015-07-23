@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Text;
 using System.Windows;
-using System.Xml.Serialization;
 
 namespace Zametek.WindowsEx.PropertyPersistence
 {
@@ -158,14 +156,14 @@ namespace Zametek.WindowsEx.PropertyPersistence
                 if (Persistence.Contains(Uid, property.Name))
                 {
                     string stringValue = Persistence.GetValue(Uid, property.Name);
-                    value = ConvertFromXml(Type, property, stringValue);
+                    value = Deserialize(property, stringValue);
                 }
                 else
                 {
                     Persistence.Persist(
                         Uid,
                         property.Name,
-                        ConvertToXml(Type, property, value));
+                        Serialize(property, value));
                 }
             }
             m_PropertyValues.Add(property, value);
@@ -187,10 +185,19 @@ namespace Zametek.WindowsEx.PropertyPersistence
                 Persistence.Persist(
                     Uid,
                     property.Name,
-                    ConvertToXml(Type, property, value));
+                    Serialize(property, value));
             }
             m_PropertyValues[property] = value;
         }
+
+
+        #endregion
+
+        #region Protected Methods
+
+        protected abstract string Serialize(DependencyProperty property, object value);
+
+        protected abstract object Deserialize(DependencyProperty property, string stringValue);
 
         #endregion
 
@@ -204,27 +211,6 @@ namespace Zametek.WindowsEx.PropertyPersistence
         internal static string ConvertToString(Type targetType, DependencyProperty property, object value)
         {
             return DependencyPropertyDescriptor.FromProperty(property, targetType).Converter.ConvertToString(value);
-        }
-
-        internal static object ConvertFromXml(Type targetType, DependencyProperty property, string stringValue)
-        {
-            var valueType = DependencyPropertyDescriptor.FromProperty(property, targetType).PropertyType;
-            var serializer = new XmlSerializer(valueType);
-            using (var stringReader = new StringReader(stringValue))
-            {
-                return serializer.Deserialize(stringReader);
-            }
-        }
-
-        internal static string ConvertToXml(Type targetType, DependencyProperty property, object value)
-        {
-            var valueType = DependencyPropertyDescriptor.FromProperty(property, targetType).PropertyType;
-            var serializer = new XmlSerializer(valueType);
-            using (var stringWriter = new StringWriter())
-            {
-                serializer.Serialize(stringWriter, value);
-                return stringWriter.ToString();
-            }
         }
 
         internal static string GetNamespace(DependencyObject element)
@@ -278,25 +264,6 @@ namespace Zametek.WindowsEx.PropertyPersistence
                 name = element.GetType().Name;
             }
             return name;
-        }
-
-        private static string SerializeToXml<T>(T source) where T : class
-        {
-            var serializer = new XmlSerializer(typeof(T));
-            using (var stringWriter = new StringWriter())
-            {
-                serializer.Serialize(stringWriter, source);
-                return stringWriter.ToString();
-            }
-        }
-
-        private static T DeserializeFromXml<T>(string source) where T : class
-        {
-            var serializer = new XmlSerializer(typeof(T));
-            using (var stringReader = new StringReader(source))
-            {
-                return serializer.Deserialize(stringReader) as T;
-            }
         }
 
         #endregion

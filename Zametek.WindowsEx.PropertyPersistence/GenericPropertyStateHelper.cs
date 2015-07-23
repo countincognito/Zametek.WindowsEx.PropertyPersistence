@@ -61,25 +61,16 @@ namespace Zametek.WindowsEx.PropertyPersistence
             {
                 return null;
             }
-
-
-
-
             object outputValue = defaultValue;
-
-
-
             if (outputValue == null
                 || string.IsNullOrEmpty(outputValue.ToString()))
             {
                 throw new InvalidOperationException(string.Format("No default value provided for property {0}.{1}", target, property.Name));
             }
-
             if (!outputValue.GetType().IsSerializable)
             {
                 return null;
             }
-
 
             var element = target as FrameworkElement;
             FrameworkElement visualAnchor = AbstractPropertyState<TState, TElement, TProperty>.GetVisualAnchor(target);
@@ -87,26 +78,17 @@ namespace Zametek.WindowsEx.PropertyPersistence
             {
                 element = visualAnchor;
             }
-
-
-
-
-
             var defaultString = outputValue as string;
             if (!string.IsNullOrEmpty(defaultString))
             {
                 outputValue = AbstractPropertyState<TState, TElement, TProperty>.ConvertFromString(target.GetType(), property, defaultString);
             }
-
-
-
-
-            //object defaultValue = AbstractPropertyState<TState, TElement, TProperty>.ConvertFromString(target.GetType(), property, defaultString);
             var propertyMultiValueConverter = new PropertyMultiValueConverter()
             {
                 Target = element,
                 Property = property,
             };
+
             RoutedEventHandler handler = null;
             handler = (s, e) =>
             {

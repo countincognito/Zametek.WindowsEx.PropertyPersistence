@@ -27,10 +27,10 @@ namespace Zametek.WindowsEx.PropertyPersistence.Xml
         {
             if (File.Exists(m_XmlFileName))
             {
-                using (var stream = File.Open(m_XmlFileName, FileMode.Open))
+                using (FileStream stream = File.Open(m_XmlFileName, FileMode.Open))
                 {
                     var xmlSerializer = new XmlSerializer(typeof(State));
-                    return (State)xmlSerializer.Deserialize(stream);
+                    return xmlSerializer.Deserialize(stream) as State;
                 }
             }
             return new State();
@@ -38,7 +38,7 @@ namespace Zametek.WindowsEx.PropertyPersistence.Xml
 
         public void Save(State state)
         {
-            using (var stream = File.Open(m_XmlFileName, FileMode.Create))
+            using (FileStream stream = File.Open(m_XmlFileName, FileMode.Create))
             {
                 var xmlSerializer = new XmlSerializer(typeof(State));
                 var namespaces = new XmlSerializerNamespaces();
