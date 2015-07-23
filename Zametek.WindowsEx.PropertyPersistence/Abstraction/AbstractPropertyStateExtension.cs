@@ -13,7 +13,7 @@ namespace Zametek.WindowsEx.PropertyPersistence
     {
         #region Public Properties
 
-        public string Default
+        public object Default
         {
             get;
             set;

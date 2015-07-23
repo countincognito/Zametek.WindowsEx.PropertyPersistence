@@ -54,17 +54,33 @@ namespace Zametek.WindowsEx.PropertyPersistence
 
         #region Internal Static Methods
 
-        internal static object ProvideValue(DependencyObject target, DependencyProperty property, string defaultString, BindingBase xamlBinding)
+        internal static object ProvideValue(DependencyObject target, DependencyProperty property, object defaultValue, BindingBase xamlBinding)
         {
             if (target == null
                 || property == null)
             {
                 return null;
             }
-            if (string.IsNullOrEmpty(defaultString))
+
+
+
+
+            object outputValue = defaultValue;
+
+
+
+            if (outputValue == null
+                || string.IsNullOrEmpty(outputValue.ToString()))
             {
                 throw new InvalidOperationException(string.Format("No default value provided for property {0}.{1}", target, property.Name));
             }
+
+            if (!outputValue.GetType().IsSerializable)
+            {
+                return null;
+            }
+
+
             var element = target as FrameworkElement;
             FrameworkElement visualAnchor = AbstractPropertyState<TState, TElement, TProperty>.GetVisualAnchor(target);
             if (element == null || visualAnchor != null)
@@ -72,7 +88,20 @@ namespace Zametek.WindowsEx.PropertyPersistence
                 element = visualAnchor;
             }
 
-            object defaultValue = AbstractPropertyState<TState, TElement, TProperty>.ConvertFromString(target.GetType(), property, defaultString);
+
+
+
+
+            var defaultString = outputValue as string;
+            if (!string.IsNullOrEmpty(defaultString))
+            {
+                outputValue = AbstractPropertyState<TState, TElement, TProperty>.ConvertFromString(target.GetType(), property, defaultString);
+            }
+
+
+
+
+            //object defaultValue = AbstractPropertyState<TState, TElement, TProperty>.ConvertFromString(target.GetType(), property, defaultString);
             var propertyMultiValueConverter = new PropertyMultiValueConverter()
             {
                 Target = element,
@@ -93,7 +122,7 @@ namespace Zametek.WindowsEx.PropertyPersistence
                 }
                 if (!HasPropertyValue(target, property))
                 {
-                    AddPropertyValue(target, property, defaultValue);
+                    AddPropertyValue(target, property, outputValue);
                 }
 
                 var multiBinding = new MultiBinding()
@@ -128,7 +157,7 @@ namespace Zametek.WindowsEx.PropertyPersistence
             {
                 return GetPropertyValue(target, property);
             }
-            return defaultValue;
+            return outputValue;
         }
 
         internal static string GetUidWithNamespace(DependencyObject element)
@@ -308,23 +337,33 @@ namespace Zametek.WindowsEx.PropertyPersistence
             {
                 if (values.Length == 1)
                 {
-                    return values[0];
+                    return System.Convert.ChangeType(values[0], targetType);
                 }
                 if (values.Length == 2)
                 {
                     if (ReadStateFirst)
                     {
-                        return values[0];
+                        return System.Convert.ChangeType(values[0], targetType);
                     }
-                    UpdatePropertyValue(Target, Property, values[1]);
-                    return values[1];
+                    object result = System.Convert.ChangeType(values[1], targetType);
+                    UpdatePropertyValue(Target, Property, result);
+                    return result;
                 }
                 throw new InvalidOperationException();
             }
 
             public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
             {
-                return new object[] { value, value };
+                if (targetTypes == null)
+                {
+                    throw new InvalidOperationException();
+                }
+                var results = new List<object>();
+                foreach (Type targetType in targetTypes)
+                {
+                    results.Add(System.Convert.ChangeType(value, targetType));
+                }
+                return results.ToArray();
             }
         }
 

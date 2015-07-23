@@ -1,0 +1,213 @@
+﻿<Window x:Class="Zametek.WindowsEx.PropertyPersistence.TestApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:z="clr-namespace:Zametek.WindowsEx.PropertyPersistence.Xml;assembly=Zametek.WindowsEx.PropertyPersistence"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        Title="Main Window"
+        x:Name="MyWindow"
+        z:PropertyState.Uid="myWindow"
+        z:PropertyState.Mode="Persisted"
+        MinHeight="450"
+        MinWidth="550"
+        Height="{z:PropertyState Default=500, Binding={Binding Path=MyHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}}"
+        Width="{z:PropertyState Default=600}">
+    <DockPanel x:Name="RootPanel"
+               Margin="11">
+        <GroupBox DockPanel.Dock="Top"
+                  Margin="0,0,0,7">
+            <GroupBox.Header>
+                <TextBlock z:PropertyState.Uid="myGroupBoxHeader"
+                           z:PropertyState.Mode="Persisted"
+                           z:PropertyState.IsNamespacingEnabled="True"
+                           Text="{z:PropertyState Default=Height}"/>
+            </GroupBox.Header>
+            <DockPanel Margin="7">
+                <DockPanel DockPanel.Dock="Top"
+                           Margin="0,0,0,7">
+                    <TextBlock Text="Height: 500 (Default)"
+                               VerticalAlignment="Center"
+                               DockPanel.Dock="Left"/>
+                    <Button Content="Increment ViewModel 'MyHeight'"
+                            Height="23"
+                            Width="200"
+                            Command="{Binding Path=HeightIncrementCommand, Mode=OneWay}"
+                            DockPanel.Dock="Right" />
+                    <Grid />
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Top"
+                           Margin="0,0,0,7">
+                    <TextBlock Text="MinHeight: "
+                               VerticalAlignment="Center"
+                               DockPanel.Dock="Left"/>
+                    <TextBlock Text="{Binding ElementName=MyWindow, Path=MinHeight, Mode=OneWay}"
+                               VerticalAlignment="Center"
+                               DockPanel.Dock="Left" />
+                    <Label Content="{Binding Path=HeightIncrement, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                           VerticalContentAlignment="Center"
+                           HorizontalContentAlignment="Right"
+                           Height="23"
+                           Width="50"
+                           DockPanel.Dock="Right" />
+                    <TextBlock Text="VM 'HeightIncrement' value: "
+                               VerticalAlignment="Center"
+                               DockPanel.Dock="Right"/>
+                    <Grid />
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Top"
+                           Margin="0,0,0,7">
+                    <TextBlock Text="Height: "
+                               VerticalAlignment="Center"
+                               DockPanel.Dock="Left"/>
+                    <TextBlock Text="{Binding ElementName=MyWindow, Path=ActualHeight, Mode=OneWay}"
+                               VerticalAlignment="Center"
+                               DockPanel.Dock="Left" />
+                    <TextBlock Text=" (Element 'MyWindow' ActualHeight)"
+                               VerticalAlignment="Center"
+                               DockPanel.Dock="Left"/>
+                    <TextBox z:PropertyState.Uid="myIncrementTextBox"
+                             z:PropertyState.Mode="Persisted"
+                             z:PropertyState.IsNamespacingEnabled="False"
+                             Text="{z:PropertyState Default=20, Binding={Binding Path=HeightIncrement, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}}"
+                             VerticalContentAlignment="Center"
+                             HorizontalContentAlignment="Right"
+                             Height="23"
+                             Width="50"
+                             DockPanel.Dock="Right" />
+                    <TextBlock Text="Height: "
+                               VerticalAlignment="Center"
+                               DockPanel.Dock="Right"/>
+                    <Grid />
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Top">
+                    <TextBlock Text="Height: "
+                               VerticalAlignment="Center"
+                               DockPanel.Dock="Left"/>
+                    <TextBlock Text="{Binding Path=MyHeight, Mode=OneWay}"
+                               VerticalAlignment="Center"
+                               DockPanel.Dock="Left" />
+                    <TextBlock Text=" (VM 'MyHeight' value)"
+                               VerticalAlignment="Center"
+                               DockPanel.Dock="Left"/>
+                </DockPanel>
+            </DockPanel>
+        </GroupBox>
+
+        <GroupBox DockPanel.Dock="Top"
+                  Margin="0,0,0,7">
+            <GroupBox.Header>
+                <TextBlock z:PropertyState.VisualAnchor="{Binding ElementName=RootPanel}"
+                           z:PropertyState.Uid="myGroupBoxHeader"
+                           z:PropertyState.Mode="Persisted"
+                           z:PropertyState.IsNamespacingEnabled="True"
+                           Text="{z:PropertyState Default=Width}"/>
+            </GroupBox.Header>
+            <DockPanel Margin="7">
+                <DockPanel DockPanel.Dock="Top"
+                           Margin="0,0,0,7">
+                    <TextBlock Text="Width: 600 (Default)"
+                               VerticalAlignment="Center"
+                               DockPanel.Dock="Left"/>
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Top"
+                           Margin="0,0,0,7">
+                    <TextBlock Text="MinWidth: "
+                               VerticalAlignment="Center"
+                               DockPanel.Dock="Left"/>
+                    <TextBlock Text="{Binding ElementName=MyWindow, Path=MinWidth, Mode=OneWay}"
+                               VerticalAlignment="Center"
+                               DockPanel.Dock="Left" />
+                </DockPanel>
+                <DockPanel DockPanel.Dock="Top">
+                    <TextBlock Text="Width: "
+                               VerticalAlignment="Center"
+                               DockPanel.Dock="Left"/>
+                    <TextBlock Text="{Binding ElementName=MyWindow, Path=ActualWidth, Mode=OneWay}"
+                               VerticalAlignment="Center"
+                               DockPanel.Dock="Left" />
+                    <TextBlock Text=" (Element 'MyWindow' ActualWidth)"
+                               VerticalAlignment="Center"
+                               DockPanel.Dock="Left"/>
+                </DockPanel>
+            </DockPanel>
+        </GroupBox>
+
+        <Grid Height="100"
+              DockPanel.Dock="Top"
+              Margin="0,0,0,7">
+            <TabControl z:PropertyState.Uid="myTabControl"
+                        z:PropertyState.Mode="Persisted"
+                        z:PropertyState.IsNamespacingEnabled="True"
+                        SelectedIndex="{z:PropertyState Default=0, Binding={Binding Path=MyTabIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}}">
+                <TabItem Header="Tab 1"
+                         Background="Red"/>
+                <TabItem Header="Tab 2"
+                         Background="Yellow"/>
+                <TabItem Header="Tab 3"
+                         Background="Blue"/>
+            </TabControl>
+        </Grid>
+
+        <GroupBox Header="Blah"
+                  DockPanel.Dock="Top">
+            <GroupBox.Resources>
+
+                <x:Array x:Key="SomeBrushes" Type="{x:Type SolidColorBrush}">
+                    <SolidColorBrush>Red</SolidColorBrush>
+                    <SolidColorBrush>Green</SolidColorBrush>
+                    <SolidColorBrush>Blue</SolidColorBrush>
+                </x:Array>
+
+                <sys:Double x:Key="blah">65</sys:Double>
+                
+                <SolidColorBrush Color="Red" x:Key="RedColorBrush" />
+                <SolidColorBrush Color="Yellow" x:Key="YellowColorBrush" />
+                <SolidColorBrush Color="Blue" x:Key="BlueColorBrush" />
+            </GroupBox.Resources>
+            
+            <DockPanel Margin="7">
+                <DockPanel DockPanel.Dock="Top"
+                           Margin="0,0,0,7">
+                    <Button Content="Add Tile"
+                            Height="23"
+                            Width="100"
+                            Margin="0,0,7,0"
+                            Command="{Binding Path=AddTileCommand, Mode=OneWay}"
+                            DockPanel.Dock="Left" />
+
+                    <ComboBox z:PropertyState.Uid="myComboBox"
+                              z:PropertyState.Mode="Persisted"
+                              DockPanel.Dock="Left"
+                              DisplayMemberPath="Color"
+                        ItemsSource="{Binding Source={StaticResource SomeBrushes}}"
+                        SelectedValue="{z:PropertyState Default={StaticResource RedColorBrush}}"
+                              SelectedValuePath="Name"
+                              >
+                        <!--DisplayMemberPath="Color"
+                              Width="{z:PropertyState Default={StaticResource blah}}"
+                        ItemsSource="{Binding Source={StaticResource SomeBrushes}}"
+                        SelectedValue="{z:PropertyState Default={StaticResource RedColorBrush}}"
+                              SelectedValuePath="Name">-->
+                    </ComboBox>
+                    
+                    <Grid />
+                </DockPanel>
+
+                <ItemsControl ItemsSource="{Binding Path=Tiles, Mode=OneWay}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Ellipse Width="20"
+                                     Height="20"
+                                     Fill="Blue"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </DockPanel>
+        </GroupBox>
+    </DockPanel>
+</Window>
