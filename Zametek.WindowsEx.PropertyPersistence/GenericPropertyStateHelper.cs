@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
+using Zametek.Utility;
 
 namespace Zametek.WindowsEx.PropertyPersistence
 {
@@ -69,7 +70,7 @@ namespace Zametek.WindowsEx.PropertyPersistence
             }
             if (!outputValue.GetType().IsSerializable)
             {
-                return null;
+                throw new InvalidOperationException(string.Format("Default value provided for property {0}.{1} is not serializable", target, property.Name));
             }
 
             var element = target as FrameworkElement;
@@ -100,11 +101,19 @@ namespace Zametek.WindowsEx.PropertyPersistence
                 if (xamlBinding != null
                    && !IsPropertyPersisted(target, property))
                 {
-                    propertyMultiValueConverter.ReadStateFirst = false;
+                    // Normally the persisted state is the initial value used
+                    // for an element property when the UI is rendered, but if
+                    // no value is persisted (and a data bound property is present)
+                    // then use the data bound value.
+                    propertyMultiValueConverter.PropertyValuePreference = PropertyValuePreference.DataBound;
                 }
                 if (!HasPropertyValue(target, property))
                 {
-                    AddPropertyValue(target, property, outputValue);
+                    object value = AddPropertyValue(target, property, outputValue);
+                    if (value == null)
+                    {
+                        throw new InvalidOperationException(string.Format("The element {0} has no unique identifier for property persistence", target));
+                    }
                 }
 
                 var multiBinding = new MultiBinding()
@@ -113,23 +122,31 @@ namespace Zametek.WindowsEx.PropertyPersistence
                     Mode = BindingMode.TwoWay,
                     UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
                 };
+                // Add a new binding between the element property and the
+                // persisted state.
                 multiBinding.Bindings.Add(CreateStateBinding(target, property));
                 if (xamlBinding != null)
                 {
+                    // If the element property was previously data bound in XAML
+                    // then add that binding to the multibinding collection.
                     multiBinding.Bindings.Add(xamlBinding);
                 }
                 BindingOperations.SetBinding(target, property, multiBinding);
 
                 if (element.IsLoaded)
                 {
-                    propertyMultiValueConverter.ReadStateFirst = false;
+                    propertyMultiValueConverter.PropertyValuePreference = PropertyValuePreference.DataBound;
                 }
             };
 
+            // Windows are already loaded when the application starts
+            // so need to invoke their loaded handlers manually.
             if (target is Window)
             {
                 handler(null, null);
             }
+            // Keep track of the loaded handlers in case they need to
+            // activated manually later.
             AddPropertyLoadedHandler(target, property, handler);
             if (element != null)
             {
@@ -294,10 +311,10 @@ namespace Zametek.WindowsEx.PropertyPersistence
         {
             public PropertyMultiValueConverter()
             {
-                ReadStateFirst = true;
+                PropertyValuePreference = PropertyValuePreference.PersistedState;
             }
 
-            public bool ReadStateFirst
+            public PropertyValuePreference PropertyValuePreference
             {
                 get;
                 set;
@@ -319,16 +336,45 @@ namespace Zametek.WindowsEx.PropertyPersistence
             {
                 if (values.Length == 1)
                 {
-                    return System.Convert.ChangeType(values[0], targetType);
+                    object input = values[0];
+                    if (targetType.IsAssignableFrom(input.GetType()))
+                    {
+                        return input;
+                    }
+                    return System.Convert.ChangeType(input, targetType);
                 }
                 if (values.Length == 2)
                 {
-                    if (ReadStateFirst)
-                    {
-                        return System.Convert.ChangeType(values[0], targetType);
-                    }
-                    object result = System.Convert.ChangeType(values[1], targetType);
-                    UpdatePropertyValue(Target, Property, result);
+                    object result = null;
+                    // If there are two values then one is from the persisted state and the other
+                    // is from property binding. So either return the persisted state (if required)
+                    // or grab the bound property value, persist it, and then return it.
+                    PropertyValuePreference.ValueSwitchOn<PropertyValuePreference>()
+                        .Case(PropertyValuePreference.PersistedState, x =>
+                        {
+                            object input = values[0];
+                            if (targetType.IsAssignableFrom(input.GetType()))
+                            {
+                                result = input;
+                            }
+                            else
+                            {
+                                result = System.Convert.ChangeType(input, targetType);
+                            }
+                        })
+                        .Case(PropertyValuePreference.DataBound, x =>
+                        {
+                            object input = values[1];
+                            if (targetType.IsAssignableFrom(input.GetType()))
+                            {
+                                result = input;
+                            }
+                            else
+                            {
+                                result = System.Convert.ChangeType(input, targetType);
+                            }
+                            UpdatePropertyValue(Target, Property, result);
+                        });
                     return result;
                 }
                 throw new InvalidOperationException();
@@ -343,10 +389,26 @@ namespace Zametek.WindowsEx.PropertyPersistence
                 var results = new List<object>();
                 foreach (Type targetType in targetTypes)
                 {
-                    results.Add(System.Convert.ChangeType(value, targetType));
+                    object result = null;
+                    object input = value;
+                    if (targetType.IsAssignableFrom(input.GetType()))
+                    {
+                        result = input;
+                    }
+                    else
+                    {
+                        result = System.Convert.ChangeType(input, targetType);
+                    }
+                    results.Add(result);
                 }
                 return results.ToArray();
             }
+        }
+
+        private enum PropertyValuePreference
+        {
+            PersistedState,
+            DataBound,
         }
 
         #endregion

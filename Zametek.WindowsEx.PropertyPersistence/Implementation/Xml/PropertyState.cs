@@ -1,4 +1,7 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Windows;
 using System.Xml.Serialization;
@@ -17,7 +20,7 @@ namespace Zametek.WindowsEx.PropertyPersistence.Xml
 
         protected override string Serialize(DependencyProperty property, object value)
         {
-            var valueType = DependencyPropertyDescriptor.FromProperty(property, Type).PropertyType;
+            Type valueType = DependencyPropertyDescriptor.FromProperty(property, Type).PropertyType;
             var serializer = new XmlSerializer(valueType);
             using (var stringWriter = new StringWriter())
             {
@@ -28,7 +31,11 @@ namespace Zametek.WindowsEx.PropertyPersistence.Xml
 
         protected override object Deserialize(DependencyProperty property, string stringValue)
         {
-            var valueType = DependencyPropertyDescriptor.FromProperty(property, Type).PropertyType;
+            Type valueType = DependencyPropertyDescriptor.FromProperty(property, Type).PropertyType;
+            //if (valueType.IsAssignableFrom(typeof(IEnumerable)))
+            //{
+            //    valueType = typeof(List<object>);
+            //}
             var serializer = new XmlSerializer(valueType);
             using (var stringReader = new StringReader(stringValue))
             {
