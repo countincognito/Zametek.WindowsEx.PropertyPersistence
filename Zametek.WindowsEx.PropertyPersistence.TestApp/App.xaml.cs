@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Windows;
-using Zametek.WindowsEx.PropertyPersistence.Xml;
+using Zametek.WindowsEx.PropertyPersistence.Json;
 
 namespace Zametek.WindowsEx.PropertyPersistence.TestApp
 {
@@ -12,7 +12,10 @@ namespace Zametek.WindowsEx.PropertyPersistence.TestApp
 
         public App()
         {
-            m_PropertyPersistenceFileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), "PropertyPersistence.xml");
+            m_PropertyPersistenceFileName =
+                Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory),
+                    "PropertyPersistence.json");
             m_StateResourceAccess = new StateResourceAccess(m_PropertyPersistenceFileName);
         }
 

@@ -1,6 +1,4 @@
-﻿using System.Windows;
-
-namespace Zametek.WindowsEx.PropertyPersistence.TestApp
+﻿namespace Zametek.WindowsEx.PropertyPersistence.TestApp
 {
     public partial class MainWindow
     {
