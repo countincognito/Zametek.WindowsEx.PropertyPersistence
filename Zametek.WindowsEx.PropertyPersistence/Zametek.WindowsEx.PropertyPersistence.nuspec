@@ -9,7 +9,7 @@
         <projectUrl>https://github.com/countincognito/Zametek.WindowsEx.PropertyPersistence</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Zametek Windows extensions for persisting XAML property values.</description>
-        <copyright>Copyright (C) 2015 Riccardo M. Bennett-Lovsey</copyright>
+        <copyright>Copyright (c) 2015 Riccardo M. Bennett-Lovsey</copyright>
         <dependencies>
             <group targetFramework=".NETFramework4.5">
                 <dependency id="Newtonsoft.Json" version="7.0.1" />
