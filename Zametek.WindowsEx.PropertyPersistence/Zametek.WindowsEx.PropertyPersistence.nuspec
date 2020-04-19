@@ -2,18 +2,17 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
     <metadata>
         <id>Zametek.WindowsEx.PropertyPersistence</id>
-        <version>$version$</version>
+        <version>1.1.0</version>
         <authors>countincognito</authors>
         <owners>countincognito</owners>
         <licenseUrl>https://github.com/countincognito/Zametek.WindowsEx.PropertyPersistence/blob/master/LICENSE</licenseUrl>
         <projectUrl>https://github.com/countincognito/Zametek.WindowsEx.PropertyPersistence</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>Zametek Windows extensions for persisting XAML property values.</description>
-        <copyright>Copyright (c) 2015 Riccardo M. Bennett-Lovsey</copyright>
+        <description>Zametek Windows extensions for persisting XAML property values. This package is now obsolete, please use Zametek.Windows.PropertyPersistence.Core instead.</description>
+        <copyright>Copyright (c) 2020 Riccardo M. Bennett-Lovsey</copyright>
         <dependencies>
-            <group targetFramework=".NETFramework4.5">
-                <dependency id="Newtonsoft.Json" version="7.0.1" />
-                <dependency id="Zametek.Utility" version="1.0.4.0" />
+            <group targetFramework=".NETFramework4.6.2">
+                <dependency id="Newtonsoft.Json" version="11.0.2" />
             </group>
         </dependencies>
         <frameworkAssemblies>

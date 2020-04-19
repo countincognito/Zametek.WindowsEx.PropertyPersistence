@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
-using Zametek.Utility;
 
 namespace Zametek.WindowsEx.PropertyPersistence
 {
@@ -345,36 +344,39 @@ namespace Zametek.WindowsEx.PropertyPersistence
                 }
                 if (values.Length == 2)
                 {
-                    object result = null;
                     // If there are two values then one is from the persisted state and the other
                     // is from property binding. So either return the persisted state (if required)
                     // or grab the bound property value, persist it, and then return it.
-                    PropertyValuePreference.ValueSwitchOn<PropertyValuePreference>()
-                        .Case(PropertyValuePreference.PersistedState, x =>
-                        {
-                            object input = values[0];
+                    object input;
+                    object result;
+                    switch (PropertyValuePreference)
+                    {
+                        case PropertyValuePreference.PersistedState:
+                            input = values[0];
                             if (targetType.IsAssignableFrom(input.GetType()))
                             {
                                 result = input;
                             }
                             else
                             {
-                                result = System.Convert.ChangeType(input, targetType);
+                                result = System.Convert.ChangeType(input, targetType, CultureInfo.InvariantCulture);
                             }
-                        })
-                        .Case(PropertyValuePreference.DataBound, x =>
-                        {
-                            object input = values[1];
+                            break;
+                        case PropertyValuePreference.DataBound:
+                            input = values[1];
                             if (targetType.IsAssignableFrom(input.GetType()))
                             {
                                 result = input;
                             }
                             else
                             {
-                                result = System.Convert.ChangeType(input, targetType);
+                                result = System.Convert.ChangeType(input, targetType, CultureInfo.InvariantCulture);
                             }
                             UpdatePropertyValue(Target, Property, result);
-                        });
+                            break;
+                        default:
+                            throw new InvalidOperationException($@"Unknown PropertyValuePreference value ""{PropertyValuePreference}""");
+                    }
                     return result;
                 }
                 throw new InvalidOperationException();
